@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="eeb19a80-da7d-4b89-bc05-68b4596259b4" name="141">
+        <fileTransfer rootFolder="/home/tank/huangwenhao/gopath/src/testtools/" accessType="SFTP" host="192.168.1.141" port="22" sshConfigId="1ff40a82-872e-479f-9258-07a604187292" sshConfig="tank@192.168.1.141:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
