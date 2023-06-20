@@ -99,31 +99,31 @@ class Finra:
         print(await result)
         return r
 
-    # @app.post("/fi/lastpx")
+    # @app.post("/ms/lastpx")
     # async def root(self, body: PostItem = Body(embed=True)):
     #     result = await self._lastpx_handle.Lastpx.remote(body)
     #     print(result)
     #     return {"status ": 200}
     #
-    # @app.post("/fi/side")
+    # @app.post("/ms/side")
     # async def root(self, body: PostItem = Body(embed=True)):
     #     result = await self._side_handle.Side.remote(body)
     #     print(result)
     #     return {"status ": 200}
     #
-    # @app.post("/fi/trddate")
+    # @app.post("/ms/trddate")
     # async def root(self, body: PostItem = Body(embed=True)):
     #     result = await self._trddate_handle.Trddate.remote(body)
     #     print(result)
     #     return {"status ": 200}
     #
-    # @app.post("/fi/volume")
+    # @app.post("/ms/volume")
     # async def root(self, body: PostItem = Body(embed=True)):
     #     result = await self._volume_handle.Volume.remote(body)
     #     print(result)
     #     return {"status ": 200}
     #
-    # @app.post("/fi/yfinance")
+    # @app.post("/ms/yfinance")
     # async def root(self, req: PostStr):
     #     result = await self._lastpx_handle.Lastpx.remote(req)
     #     print(result)
