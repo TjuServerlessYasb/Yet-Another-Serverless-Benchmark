@@ -1,0 +1,2 @@
+pymongo==4.3.3
+pymemcache==4.0.0
