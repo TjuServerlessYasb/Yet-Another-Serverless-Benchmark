@@ -3,7 +3,7 @@ import time
 
 from fi.service.message import GetMarginjson, GetPortfolios
 from typing import List, Dict
-
+import ray
 
 def agg_timestamp(response, events, startTime, endTime, externalServicesTime):
     stampBegin = 1000 * time.time()
@@ -74,14 +74,22 @@ class MarginBalanceService(object):
             startTime = 1000 * time.time()
             marketData = {}
             validFormat = True
+            dicNew = {}
+            for ev in dic:
+                event = ray.get(ev)
+                while not isinstance(event,dict):
+                    event = ray.get(event)
 
-            for event in dic:
-                body = event['body']
+                body = event["body"]
+                dicNew.update(body)
+                print(body)
                 if 'marketData' in body:
                     marketData = body['marketData']
                 elif 'valid' in body:
                     portfolio = event['body']['portfolio']
                     validFormat = validFormat and body['valid']
+
+                print("once")
 
             portfolios = GetPortfolios()
             portfolioData = portfolios[portfolio]
@@ -95,7 +103,9 @@ class MarginBalanceService(object):
                         'body': {'validFormat': validFormat, 'marginSatisfied': marginSatisfied}}
 
             endTime = 1000 * time.time()
-            result = agg_timestamp(response, dic, startTime, endTime, 0)
+            result = agg_timestamp(response, dicNew, startTime, endTime, 0)
+            print("result ")
+            print()
         except Exception as e:
             print(e)
             print(e.__traceback__.tb_frame.f_globals["__file__"])  # 发生异常所在的文件

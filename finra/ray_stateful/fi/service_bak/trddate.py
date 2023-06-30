@@ -1,6 +1,12 @@
 import time
+import json
+import datetime
+
 from ray import serve
+from fi.model.post import PostItem
+from fastapi import Body
 from fi.service.message import GetPortfolios
+import ray
 from typing import List, Dict
 
 def timestamp(response, event, startTime, endTime, externalServicesTime):
@@ -19,35 +25,36 @@ def timestamp(response, event, startTime, endTime, externalServicesTime):
 
 
 @serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 1, "num_gpus": 0})
-class VolumeService(object):
+class TrddateService(object):
 
-    def Volume(self, body: Dict):
-        try:
-            startTime = 1000 * time.time()
+    def Trddate(self, body: PostItem = Dict):
+        startTime = 1000 * time.time()
 
-            portfolio = body['body']['portfolio']
-            portfolios = GetPortfolios()
-            data = portfolios[portfolio]
 
-            valid = True
 
-            for trade in data:
-                qty = str(trade['LastQty'])
-                # Tag ID: 32, Tag Name: LastQty, Format: max 8 characters, no decimal
-                if (len(qty) > 8) or ('.' in qty):
+        portfolio = body["portfolio"]
+
+        portfolios = GetPortfolios()
+        print(type(portfolios))
+        data = portfolios[portfolio]
+        print(data)
+
+        valid = True
+
+        for trade in data:
+            trddate = trade['TradeDate']
+            # Tag ID: 75, Tag Name: TradeDate, Format: YYMMDD
+            if len(trddate) == 6:
+                try:
+                    datetime.datetime(int(trddate[0:2]), int(trddate[2:4]), int(trddate[4:6]))
+                except ValueError:
                     valid = False
                     break
+            else:
+                valid = False
+                break
 
-            response = {'statusCode': 200, 'body': {'valid': valid, 'portfolio': portfolio}}
-            endTime = 1000 * time.time()
-            result = timestamp(response, body, startTime, endTime, 0)
-            print(result)
-
-        except Exception as e:
-            print(e)
-            print(e.__traceback__.tb_frame.f_globals["__file__"])  # 发生异常所在的文件
-            print(e.__traceback__.tb_lineno)  # 发生异常所在的行数
-        else:
-            print("success")
-
-        return result
+        response = {'statusCode': 200, 'body': {'valid': valid, 'portfolio': portfolio}}
+        endTime = 1000 * time.time()
+        result = timestamp(response, body, startTime, endTime, 0)
+        return ray.put(result)

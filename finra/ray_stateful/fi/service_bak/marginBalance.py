@@ -1,8 +1,10 @@
 from ray import serve
 import time
-
-from fi.service.message import GetMarginjson, GetPortfolios
+import json
 from typing import List, Dict
+from fi.model.post import PostItem
+from fastapi import Body
+from fi.service.message import GetPortfolios
 
 
 def agg_timestamp(response, events, startTime, endTime, externalServicesTime):
@@ -39,12 +41,8 @@ def agg_timestamp(response, events, startTime, endTime, externalServicesTime):
 
 
 def checkMarginBalance(portfolioData, marketData, portfolio):
+    marginAccountBalance = json.loads(open('/home/app/function/marginBalance.json', 'r').read())[portfolio]
 
-    marginAccountBalance = GetMarginjson()[portfolio]
-    print("get success")
-    print(marginAccountBalance)
-    print(">>>>>>>>")
-    print(portfolioData)
     portfolioMarketValue = 0
     for trade in portfolioData:
         security = trade['Security']
@@ -63,45 +61,29 @@ def checkMarginBalance(portfolioData, marketData, portfolio):
 @serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 1, "num_gpus": 0})
 class MarginBalanceService(object):
     # def __init__(self):
-    def MarginBalance(self, dic: List):
+    def MarginBalance(self, body: List):
+        events = json.loads(body)
 
-        try:
-            #
-            # events = json.loads(body)
-            #
-            # events = [json.loads(event) for event in events]
-            print(dic)
-            startTime = 1000 * time.time()
-            marketData = {}
-            validFormat = True
+        events = [json.loads(event) for event in events]
 
-            for event in dic:
-                body = event['body']
-                if 'marketData' in body:
-                    marketData = body['marketData']
-                elif 'valid' in body:
-                    portfolio = event['body']['portfolio']
-                    validFormat = validFormat and body['valid']
+        startTime = 1000 * time.time()
+        marketData = {}
+        validFormat = True
 
-            portfolios = GetPortfolios()
-            portfolioData = portfolios[portfolio]
-            print("show:::")
-            print(portfolioData)
-            print(marketData)
-            print(portfolio)
-            marginSatisfied = checkMarginBalance(portfolioData, marketData, portfolio)
+        for event in events:
+            body = event['body']
+            if 'marketData' in body:
+                marketData = body['marketData']
+            elif 'valid' in body:
+                portfolio = event['body']['portfolio']
+                validFormat = validFormat and body['valid']
 
-            response = {'statusCode': 200,
-                        'body': {'validFormat': validFormat, 'marginSatisfied': marginSatisfied}}
+        portfolios = GetPortfolios()
+        portfolioData = portfolios[portfolio]
+        marginSatisfied = checkMarginBalance(portfolioData, marketData, portfolio)
 
-            endTime = 1000 * time.time()
-            result = agg_timestamp(response, dic, startTime, endTime, 0)
-        except Exception as e:
-            print(e)
-            print(e.__traceback__.tb_frame.f_globals["__file__"])  # 发生异常所在的文件
-            print(e.__traceback__.tb_lineno)  # 发生异常所在的行数
-        else:
-            print("success")
+        response = {'statusCode': 200,
+                    'body': {'validFormat': validFormat, 'marginSatisfied': marginSatisfied}}
 
-
-        return result
+        endTime = 1000 * time.time()
+        return agg_timestamp(response, events, startTime, endTime, 0)

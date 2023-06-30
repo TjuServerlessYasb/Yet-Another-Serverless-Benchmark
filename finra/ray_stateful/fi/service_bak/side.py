@@ -1,7 +1,10 @@
 import time
 from ray import serve
 
+from fi.model.post import PostItem
+from fastapi import Body
 from fi.service.message import GetPortfolios
+import ray
 from typing import List, Dict
 
 def timestamp(response, event, startTime, endTime, externalServicesTime):
@@ -22,32 +25,22 @@ def timestamp(response, event, startTime, endTime, externalServicesTime):
 @serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 1, "num_gpus": 0})
 class SideService(object):
     def Side(self, body: Dict):
-        try:
+        startTime = 1000 * time.time()
+        portfolio = body["portfolio"]
+        portfolios = GetPortfolios()
+        data = portfolios[portfolio]
 
-            startTime = 1000 * time.time()
-            portfolio = body['body']['portfolio']
-            portfolios = GetPortfolios()
-            data = portfolios[portfolio]
+        valid = True
 
-            valid = True
+        for trade in data:
+            side = trade['Side']
+            # Tag ID: 552, Tag Name: Side, Valid values: 1,2,8
+            if not (side == 1 or side == 2 or side == 8):
+                valid = False
+                break
 
-            for trade in data:
-                side = trade['Side']
-                # Tag ID: 552, Tag Name: Side, Valid values: 1,2,8
-                if not (side == 1 or side == 2 or side == 8):
-                    valid = False
-                    break
-
-            response = {'statusCode': 200, 'body': {'valid': valid, 'portfolio': portfolio}}
-            endTime = 1000 * time.time()
-            result = timestamp(response, body, startTime, endTime, 0)
-            print(result)
-
-        except Exception as e:
-            print(e)
-            print(e.__traceback__.tb_frame.f_globals["__file__"])  # 发生异常所在的文件
-            print(e.__traceback__.tb_lineno)  # 发生异常所在的行数
-        else:
-            print("success")
-
-        return result
+        response = {'statusCode': 200, 'body': {'valid': valid, 'portfolio': portfolio}}
+        endTime = 1000 * time.time()
+        print(timestamp(response, body, startTime, endTime, 0))
+        result = timestamp(response, body, startTime, endTime, 0)
+        return ray.put(result)

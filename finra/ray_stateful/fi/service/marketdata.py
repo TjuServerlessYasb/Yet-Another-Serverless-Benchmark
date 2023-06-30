@@ -1,7 +1,7 @@
 from ray import serve
 from typing import List, Dict
 import time
-
+import ray
 from fi.service.market.base import Ticker
 
 @serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 1, "num_gpus": 0})
@@ -29,6 +29,7 @@ class MarketdataService(object):
             prices = {}
             for ticker in tickers:
                 tickerObj = Ticker(ticker)
+                print(tickerObj)
                 # Get last closing price
                 tickTime = time.time()
                 data = tickerObj.history(period="1")
@@ -56,5 +57,5 @@ class MarketdataService(object):
             print("success")
 
 
-        return response
+        return ray.put(response)
 

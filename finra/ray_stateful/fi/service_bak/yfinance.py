@@ -1,6 +1,11 @@
 from ray import serve
+import time
+import json
 
-from typing import List, Dict
+from fi.model.post import PostStr
+from fastapi import Body
+from fi.service.message import GetPortfolios
+
 
 data = {
   'GOOG': '{"chart":{"result":[{"meta":{"currency":"USD","symbol":"GOOG","exchangeName":"NMS","instrumentType":"EQUITY","firstTradeDate":1092922200,"regularMarketTime":1656360004,"gmtoffset":-14400,"timezone":"EDT","exchangeTimezoneName":"America/New_York","regularMarketPrice":2332.45,"chartPreviousClose":2370.76,"priceHint":2,"currentTradingPeriod":{"pre":{"timezone":"EDT","end":1656423000,"start":1656403200,"gmtoffset":-14400},"regular":{"timezone":"EDT","end":1656446400,"start":1656423000,"gmtoffset":-14400},"post":{"timezone":"EDT","end":1656460800,"start":1656446400,"gmtoffset":-14400}},"dataGranularity":"1d","range":"1","validRanges":["1d","5d","1mo","3mo","6mo","1y","2y","5y","10y","ytd","max"]},"timestamp":[1656336600],"indicators":{"quote":[{"volume":[1641500],"close":[2332.449951171875],"high":[2385.0],"open":[2378.699951171875],"low":[2320.014892578125]}],"adjclose":[{"adjclose":[2332.449951171875]}]}}],"error":null}}',
@@ -12,9 +17,6 @@ data = {
 @serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 1, "num_gpus": 0})
 class YfinanceService(object):
     # def __init__(self):
-    def Yfinance(self, body: Dict) -> Dict:
-        r = body['body']
-        print(data[r])
-        print(type(data[r]))
-
+    def Yfinance(self, req: PostStr):
+        r = req.input_str
         return data[r]

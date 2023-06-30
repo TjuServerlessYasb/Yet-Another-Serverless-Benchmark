@@ -27,7 +27,7 @@ import requests as _requests
 import pandas as _pd
 import numpy as _np
 import re as _re
-
+import ray
 
 try:
     from urllib.parse import quote as urlencode
@@ -211,10 +211,10 @@ class Ticker():
             #
             resp = _requests.post("http://10.244.0.183:8000/fi/yfinance", data=_json.dumps(req1), headers=headers).text
             # data = _requests.post("http://10.244.0.158:8000/fi/yfinance", data=self.ticker, headers=headers)
-            print("resp::::::::::::::::::::::")
-
+            print("resp::::::::::::")
             print(resp)
             print(type(resp))
+
 
             data = _json.loads(_json.loads(_json.loads(resp)))
             print("data")
