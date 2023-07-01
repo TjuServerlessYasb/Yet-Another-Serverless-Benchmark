@@ -88,7 +88,7 @@ class Finra:
     @app.get("/fi/workflow")
     async def root(self):
         try:
-            # curl http://10.244.0.183:8000/ms/workflow
+            # curl http://10.244.0.183:8000/fi/workflow
             print(123132123)
             req = {"body": {"portfolioType": "S&P", "portfolio": "1234"}}
             tasks = []
