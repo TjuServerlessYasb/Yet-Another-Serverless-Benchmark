@@ -16,7 +16,10 @@ class CurveFittingService(object):
             event = body
             X = event['X']
             y = event['y']
-            func = event['func']
+
+            def func(x, a, b):
+                y = a * x + b
+                return y
             popt, pcov = curve_fit(func, X, y)
 
         except Exception as e:

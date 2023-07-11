@@ -4,15 +4,15 @@ from typing import List, Dict
 
 
 @serve.deployment(num_replicas=1, ray_actor_options={"num_cpus": 1, "num_gpus": 0})
-class ArrangedProblemsService(object):
+class ArithmeticArrangerService(object):
     # def __init__(self):
-    def ArrangedProblems(self, body: Dict):
+    def ArithmeticArranger(self, body: Dict):
         print(123)
         try:
 
             event = body
             problems = event["problems"]
-            answer = event["answer"]
+            answer = True
             # Check the number of problems
             if len(problems) > 5:
                 return "Error: Too many problems."
