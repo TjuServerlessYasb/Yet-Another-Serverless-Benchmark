@@ -55,7 +55,7 @@ def workflow():
     res = requests.post(margin_balance_url, data=json.dumps(result), headers=headers).text
     print("res:::::::::::::::::")
     print(res)
-    # print("This request uses %d ms" % int((time.time() - start) * 1000))
+    # print("This request uses %d so" % int((time.time() - start) * 1000))
     return int((time.time() - start) * 1000)
 
 
@@ -70,7 +70,7 @@ def index():
 
     # print(lats)
     # print(sum(lats[1:]) / (len(lats) - 1))
-    # print("This request uses %d ms" %(sum(lats[1:]) / (len(lats) - 1)))
+    # print("This request uses %d so" %(sum(lats[1:]) / (len(lats) - 1)))
     return {
         "msg": "success",
         "data": "welcome"

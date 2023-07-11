@@ -143,7 +143,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--ip",
         help="IP address of ray head.",
-        default="10.244.0.158",
+        default="10.244.0.183",
     )
     parser.add_argument(
         "--dashboard-port",

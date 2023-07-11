@@ -2,7 +2,8 @@ from xmlrpc.client import ResponseError
 
 from minio import Minio
 
-minioClient = Minio("10.244.4.7:9000", access_key="admin123", secret_key="admin123", secure=False)
+#minioClient = Minio("10.244.4.7:9000", access_key="admin123", secret_key="admin123", secure=False)
+minioClient = Minio("minio-service.yasb-mapreduce-db.svc.cluster.local:9000", access_key="admin123", secret_key="admin123", secure=False)
 print(111)
 
 # try:
@@ -11,8 +12,9 @@ print(111)
 #     print(err)
 
 buckets = minioClient.list_buckets()
-for bucket in buckets:
-    print(bucket.name, bucket.creation_date)
+print(len(buckets))
+# for bucket in buckets:
+#     print(bucket.name, bucket.creation_date)
     # try:
     #     minioClient.remove_bucket(bucket.name)
     # except ResponseError as err:

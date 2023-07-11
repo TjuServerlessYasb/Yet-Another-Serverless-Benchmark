@@ -1,0 +1,23 @@
+import_path: so.main:ingress
+
+runtime_env:
+  pip:
+    - "pymongo==4.3.3"
+    - "pymemcache==4.0.0"
+
+host: 0.0.0.0
+
+port: 8000
+
+deployments:
+
+- name: ComposeReviewService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+
+
+
+- name: Solver

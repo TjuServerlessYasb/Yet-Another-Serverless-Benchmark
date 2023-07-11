@@ -83,7 +83,7 @@ def workflow():
         t.join()
 
     return int((time.time() - start) * 1000)
-    print("This request uses %d ms" % int((time.time() - start) * 1000))
+    print("This request uses %d so" % int((time.time() - start) * 1000))
 
     funcs_time = {}
     for f in funcs:
@@ -101,7 +101,7 @@ def workflow():
                         funcs_time[k] = round((v["end_time"] - v["start_time"]) * 1000, 2)
             print("Details:")
             for f in funcs:
-                print("  %s: %s ms" % (f, str(funcs_time[f])))
+                print("  %s: %s so" % (f, str(funcs_time[f])))
     except Exception as e:
         print("Something wrong in the final stage")
         print(e)
@@ -114,7 +114,7 @@ def index():
         lat = workflow()
         lats.append(lat)
 
-    print("This request uses %d ms" %(sum(lats[1:]) / (len(lats) - 1)))
+    print("This request uses %d so" %(sum(lats[1:]) / (len(lats) - 1)))
     return {
         "msg": "success",
         "data": "welcome"

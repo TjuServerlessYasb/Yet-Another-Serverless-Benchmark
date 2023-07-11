@@ -1,4 +1,4 @@
-import_path: ms.main:ingress
+import_path: so.main:ingress
 
 runtime_env:
   pip:

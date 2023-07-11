@@ -35,7 +35,7 @@ def workflow():
     res = requests.post(margin_balance_url, data=json.dumps(parallel_res)).text
    
     return int((time.time()-start)*1000) 
-    print("This request uses %d ms" % int((time.time()-start)*1000))
+    print("This request uses %d so" % int((time.time()-start)*1000))
 
 if __name__ == '__main__':
     lats = []

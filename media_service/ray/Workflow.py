@@ -124,7 +124,7 @@ def index():
 
     # print(lats)
     # print(sum(lats[1:]) / (len(lats) - 1))
-    # print("This request uses %d ms" %(sum(lats[1:]) / (len(lats) - 1)))
+    # print("This request uses %d so" %(sum(lats[1:]) / (len(lats) - 1)))
     return {
         "msg": "success",
         "data": "welcome"
