@@ -10,7 +10,11 @@ def handle(req):
     event = json.loads(req)
     X = event['X']
     y = event['y']
-    func = event['func']
+
+    def func(x, a, b):
+        y = a * x + b
+        return y
+
     try:
         popt, pcov = curve_fit(func, X, y)
     except Exception as e:

@@ -4,7 +4,7 @@ import json
 def handle(req):
     event = json.loads(req)
     problems = event["problems"]
-    answer = event["answer"]
+    answer = True
     # Check the number of problems
     if len(problems) > 5:
         return "Error: Too many problems."

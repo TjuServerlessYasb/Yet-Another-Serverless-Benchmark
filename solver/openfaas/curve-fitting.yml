@@ -7,3 +7,4 @@ functions:
     lang: python3-debian
     handler: ./curve-fitting
     image: 13051172893/curve-fitting:latest
+
