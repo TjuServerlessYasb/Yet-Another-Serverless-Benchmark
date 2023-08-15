@@ -1,0 +1,53 @@
+import_path: so.main:ingress
+
+runtime_env:
+  pip:
+    - "numpy"
+    - "scipy"
+
+host: 0.0.0.0
+
+port: 8000
+
+deployments:
+
+- name: ArithmeticArrangerService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+- name: CurveFittingService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+- name: EigenService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+- name: LinearProgrammingService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+- name: ProbCalculatorService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+- name: TimeCalculatorService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+
+
+
+- name: Solver

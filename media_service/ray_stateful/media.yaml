@@ -1,0 +1,74 @@
+import_path: so.main:ingress
+
+runtime_env:
+  pip:
+    - "pymongo==4.3.3"
+    - "pymemcache==4.0.0"
+
+host: 0.0.0.0
+
+port: 8000
+
+deployments:
+
+- name: ComposeReviewService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+- name: UploadUserIdService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+- name: UploadMovieIdService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+- name: MrUploadTextService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+- name: MrUploadUniqueIdService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+
+- name: MrComposeAndUploadService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+
+
+- name: StoreReviewService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+
+- name: UploadUserReviewService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+
+- name: UploadMovieReviewService
+  num_replicas: 1
+  ray_actor_options:
+    num_cpus: 1.0
+    num_gpus: 0.0
+
+
+- name: MediaService

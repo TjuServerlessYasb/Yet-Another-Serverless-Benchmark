@@ -1,0 +1,12 @@
+global financedata
+                if ticker in financedata:
+                    tickerObj = financedata[ticker]
+                    print("存在")
+                else:
+                    tickerObj = Ticker(ticker)
+                    print("不存在")
+                    financedata[ticker] = tickerObj
+
+                global a
+                a += 1
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", a)

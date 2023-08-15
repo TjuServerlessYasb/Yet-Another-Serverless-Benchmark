@@ -1,0 +1,25 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: http://127.0.0.1:31119
+functions:
+  wc-mapper:
+    lang: python3-flask
+    handler: ./wc-mapper
+    image: wc-mapper:latest
+    environment:
+      write_timeout: 1m
+      read_timeout: 1m
+      exec_timeout: 1m
+      handler_wait_duration: 1m
+    labels:
+      "com.openfaas.scale.max": "5"
+      "com.openfaas.scale.min": "5"
+    limits:
+      cpu: 2000m
+      memory: 2048Mi
+    requests:
+      cpu: 2000m
+      memory: 2048Mi
+    constraints:
+     - "kubernetes.io/hostname=kube-node-7"

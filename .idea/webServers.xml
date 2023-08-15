@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="3cb64d7f-104f-456b-a3f3-55aac53ccab7" name="141">
+        <fileTransfer rootFolder="/home/tank/huangwenhao/bench1" accessType="SFTP" host="192.168.1.141" port="22" sshConfigId="42032c9d-90c2-4401-bfec-da5c9d3aafbe" sshConfig="tank@192.168.1.141:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

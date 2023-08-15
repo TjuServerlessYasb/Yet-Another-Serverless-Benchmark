@@ -1,0 +1,10 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: http://127.0.0.1:31128
+functions:
+  linear-programming:
+    lang: python3-debian
+    handler: ./linear-programming
+    image: 13051172893/linear-programming:latest
+
