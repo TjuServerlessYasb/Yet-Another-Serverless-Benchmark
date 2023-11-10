@@ -18,11 +18,12 @@ class CampaignProcessor:
     logger = logging.getLogger("CampaignProcessor")
     cache_size = 10  # lru cache size
 
-    def __init__(self, redis_host):
-        self.redis_client = redis.Redis(host=redis_host)
-        self.flush_redis_client = redis.Redis(host=redis_host)
+    def __init__(self, redis_host, redis_port):
+        self.redis_client = redis.Redis(host=redis_host, port=redis_port)
+        self.flush_redis_client = redis.Redis(host=redis_host, port=redis_port)
         self.processed = 0
-        self.need_flush: Set[CampaignWindowPair] = {}
+        self.need_flush: Set[CampaignWindowPair] = set()
+
         # not sure whether these locks are necessary
         self.flush_lock = threading.Lock()
         self.windows_lock = threading.Lock()
@@ -39,6 +40,8 @@ class CampaignProcessor:
                 while True:
                     time.sleep(1)
                     self.flush_windows()
+                    if self.processed == 4:
+                        break
             except InterruptedError as e:
                 self.logger.error(e)
 
@@ -57,12 +60,12 @@ class CampaignProcessor:
     def write_window(self, campaign: str, win: Window):
         window_uuid = self.flush_redis_client.hmget(campaign, [win.timestamp])[0]
         if not window_uuid:
-            window_uuid = uuid.uuid4()
+            window_uuid = uuid.uuid4().bytes
             self.flush_redis_client.hset(campaign, win.timestamp, window_uuid)
 
             window_list_uuid = self.flush_redis_client.hmget(campaign, ["windows"])[0]
             if not window_list_uuid:
-                window_list_uuid = uuid.uuid4()
+                window_list_uuid = uuid.uuid4().bytes
                 self.flush_redis_client.hset(campaign, "windows", window_list_uuid)
 
             self.flush_redis_client.lpush(window_list_uuid, win.timestamp)
@@ -83,10 +86,8 @@ class CampaignProcessor:
                 self.write_window(pair.campaign, pair.window)
             self.need_flush.clear()
 
-    def redis_get_window(time_bucket: int, time_divisor: int) -> Window:
-        win = Window()
-        win.timestamp = time_bucket * time_divisor
-        win.seen_count = 0
+    def redis_get_window(self, time_bucket: int, time_divisor: int) -> Window:
+        win = Window(time_bucket * time_divisor, 0)
         return win
 
     # Needs to be rewritten now that redisGetWindow has been simplified.
@@ -118,5 +119,10 @@ class CampaignProcessor:
 
 
 if __name__ == "__main__":
-    CampaignProcessor("localhost").prepare()
-    print(1231231)
+    processor = CampaignProcessor("localhost", 30031)
+    processor.prepare()
+    processor.execute("alibaba", time.time())
+    processor.execute("alibaba1", time.time())
+    processor.execute("alibaba2", time.time())
+    processor.execute("alibaba3", time.time())
+    
