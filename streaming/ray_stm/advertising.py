@@ -49,7 +49,8 @@ class CampaignWindowPair(object):
 
     def __str__(self) -> str:
         return "{ " + f"{self.campaign} : {self.window}" + " }"
-    
+
+
 class RedisAdCampaignCache(object):
     def __init__(self, redis_host, redis_port):
         self.redis_client = redis.Redis(host=redis_host, port=redis_port)
@@ -64,12 +65,12 @@ class RedisAdCampaignCache(object):
             else:
                 self.ad_to_campaign[ad_id] = campaign_id
         return campaign_id
-        
+
     def close(self):
         self.redis_client.close()
 
 
-class CampaignProcessorCommon:
+class CampaignProcessorCommon(object):
     time_divisor = 10_000  # 10 seconds window
     logger = logging.getLogger("CampaignProcessor")
     cache_size = 10  # lru cache size
@@ -96,8 +97,6 @@ class CampaignProcessorCommon:
                 while True:
                     time.sleep(1)
                     self.flush_windows()
-                    if self.processed == 4:
-                        break
             except InterruptedError as e:
                 self.logger.error(e)
 

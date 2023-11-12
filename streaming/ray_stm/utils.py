@@ -17,6 +17,6 @@ def join_hosts(hosts: List[str], port: str):
     return joined
 
 
-def load_config_file(yaml_file) -> Dict:
-    with open(yaml_file, 'r') as f:
+def load_yaml_config(yaml_file) -> Dict:
+    with open(yaml_file, "r") as f:
         return yaml.safe_load(f)
