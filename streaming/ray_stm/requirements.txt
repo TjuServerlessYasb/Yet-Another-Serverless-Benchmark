@@ -3,3 +3,4 @@ ray
 redis
 lru-dict
 PyYaml
+confluent-kafka

@@ -2,15 +2,14 @@
 import json
 
 # Third party imports
-import ray
+from ray import serve
 
 # Local imports
 from ray_stm.utils import load_yaml_config
 from ray_stm.advertising_topology import (
-    DeserializeBolt,
-    EventFilterBolt,
     RedisJoinBolt,
     CampaignProcessor,
+    AdvertisingTopology,
 )
 
 if __name__ == "__main__":
@@ -29,7 +28,11 @@ if __name__ == "__main__":
             "ip_address": "192.168.10.10",
         }
     )
+    redis_join_bolt = RedisJoinBolt.bind(redis_host, redis_port)
+    processor = CampaignProcessor.bind(redis_host, redis_port)
+    topology = AdvertisingTopology.bind(redis_join_bolt, processor)
 
-    ref = DeserializeBolt.remote(input)
-    print(ray.get(ref))
-    # processor = CampaignProcessor.bind(kafka_host, kafka_port)
+    handle = serve.run(topology).options(use_new_handle_api=True)
+
+    result = handle.remote(input).result()
+    print(result)
